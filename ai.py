@@ -35,7 +35,7 @@ class AI():
     
     def is_valid_answer(self, parsed_answer):
         return not (parsed_answer['cows'] + parsed_answer['bulls'] > self.game_size or
-                    parsed_answer['bulls'] == self.game_size - 1)
+                    (parsed_answer['bulls'] == self.game_size - 1 and parsed_answer['cows'] == 1))
                 
     def constrain(self, asked_number, parsed_answer):
         print parsed_answer

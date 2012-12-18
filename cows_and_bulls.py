@@ -52,6 +52,9 @@ class Game():
                 
         
 if __name__ == '__main__':
+    print
+    print("Read more about the game and rules here: %s" % 'http://en.wikipedia.org/wiki/Bulls_and_cows')
+    print
     cnb = Game()
     cnb.play()
     

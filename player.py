@@ -10,7 +10,8 @@ class Player():
         
     def pick_random_number(self):
         possible_numbers = filter(lambda x: x[0] != 0, itertools.permutations(range(0, 10), 4))
-        return random.sample(possible_numbers, 1)[0]
+        #return random.sample(possible_numbers, 1)[0]
+        return possible_numbers[0]
         
     def ask_for_number(self):
         asked_number = raw_input("Try to guess: ")

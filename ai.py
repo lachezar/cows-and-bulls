@@ -5,11 +5,11 @@ import re
 class AI():
 
     def __init__(self, game_size=4):
-        self.possible_numbers = self.generate_all_possible_permutations()
         self.game_size = game_size
-    
+        self.possible_numbers = self.generate_all_possible_permutations()
+        
     def generate_all_possible_permutations(self):
-        return filter(lambda x: x[0] != 0, itertools.permutations(range(0, 10), 4))
+        return filter(lambda x: x[0] != 0, itertools.permutations(range(0, 10), self.game_size))
     
     def pick_random_number(self):
         return random.sample(self.possible_numbers, 1)[0]

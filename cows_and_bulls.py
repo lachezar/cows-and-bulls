@@ -52,9 +52,15 @@ class Game():
                 
         
 if __name__ == '__main__':
+    game_size = 4
+    print("Pick %d digit number with no 2 digits that are the same and without leading 0." % game_size)
+    print("The goal of the game is to guess opponent's number first.")
+    print("You are allowed to guess the number and receive response of matched digits.")
+    print("If you have guessed correct a digit and position, then it is a Bull.")
+    print("If you have guessed correct only a digit and not the position, then it is a Cow.")
     print
     print("Read more about the game and rules here: %s" % 'http://en.wikipedia.org/wiki/Bulls_and_cows')
     print
-    cnb = Game()
+    cnb = Game(game_size)
     cnb.play()
     

@@ -9,7 +9,7 @@ class Player():
         self.number_to_be_guessed = self.pick_random_number()
         
     def pick_random_number(self):
-        possible_numbers = filter(lambda x: x[0] != 0, itertools.permutations(range(0, 10), 4))
+        possible_numbers = filter(lambda x: x[0] != 0, itertools.permutations(range(0, 10), self.game_size))
         return random.sample(possible_numbers, 1)[0]
         
     def ask_for_number(self):

@@ -38,7 +38,6 @@ class AI():
                     (parsed_answer['bulls'] == self.game_size - 1 and parsed_answer['cows'] == 1))
                 
     def constrain(self, asked_number, parsed_answer):
-        print parsed_answer
         asked_number_set = set(asked_number)
         possible_numbers = filter(lambda n: 
                         parsed_answer['bulls'] == len(filter(lambda x: x[0] == x[1], zip(n, asked_number))) and

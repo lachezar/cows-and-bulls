@@ -8,20 +8,30 @@ class Game():
         self.possible_numbers = self.generate_all_possible_permutations()
         self.game_state = list()
         self.game_size = game_size
+        self.number_to_be_guessed = self.pick_random_number()
+        self.game_progress = 0
+        self.current_step = 0
     
     def generate_all_possible_permutations(self):
         return filter(lambda x: x[0] != 0, itertools.permutations(range(0, 10), 4))
     
-    def pick_number_to_ask(self):
+    def pick_random_number(self):
         return random.sample(self.possible_numbers, 1)[0]
+        
+    def ask_for_number(self, question):
+        print("Is your number %s: " % ''.join(map(str, question)))
+        answer = raw_input()
+        return answer
     
     def parse_answer(self, answer):
         bulls = 0
         cows = 0
     
-        match = re.match(r'((?P<bulls>\d)b)?((?P<cows>\d)c)?', answer)
+        match = re.match(r'((?P<bulls>\d)b)?\s*((?P<cows>\d)c)?\s*((?P<reverse_order_bulls>\d)b)?', answer)
         if match.group('bulls'):
             bulls = int(match.group('bulls'))
+        elif match.group('reverse_order_bulls'):
+            bulls = int(match.group('reverse_order_bulls'))
         if match.group('cows'):
             cows = int(match.group('cows'))
         
@@ -39,21 +49,47 @@ class Game():
                         parsed_answer['cows'] == len(asked_number_set & set(n)) - parsed_answer['bulls'],
                         self.possible_numbers)
         return possible_numbers
+        
+    def receive_players_question(self):
+        asked_number = raw_input("Try to guess: ")
+        while not (re.match(r'^\d+$', asked_number) and len(asked_number) == self.game_size):
+            asked_number = raw_input("Wrong format of the question, try again: ")
+        return map(int, asked_number)
+        
+    def answer_to_player(self, asked_number):
+        bulls = len(filter(lambda x: x[0] == x[1], zip(self.number_to_be_guessed, asked_number)))
+        cows = len(set(asked_number) & set(self.number_to_be_guessed)) - bulls
+        answer = {
+            'cows': cows,
+            'bulls': bulls
+        }
+        return answer
     
     def play(self):
         while True:
-            question = self.pick_number_to_ask()
-            print("Is your number %s: " % ''.join(map(str, question)))
-            answer = raw_input()
+            self.game_progress += 1
+            
+            print
+            print "Step %d" % self.game_progress
+            print
+            
+            asked_number = self.receive_players_question()
+            answer = self.answer_to_player(asked_number)
+            if answer['bulls'] == self.game_size:
+                print("Congratz! You won!")
+            else:
+                print("%db %dc" % (answer['bulls'], answer['cows']))
+            
+            sample_number = self.pick_random_number()
+            answer = self.ask_for_number(sample_number)
             parsed_answer = self.parse_answer(answer)
             while not self.is_valid_answer(parsed_answer):
-                print("Why are you doing this?? Try again!")
-                print("Is your number %s: " % ''.join(map(str, question)))
-                answer = raw_input()
+                print("Uh-oh, this can not be happening!")
+                answer = self.ask_for_number(sample_number)
                 parsed_answer = self.parse_answer(answer)
     
-            self.game_state.append((question, parsed_answer))
-            self.possible_numbers = self.constrain(question, parsed_answer)
+            self.game_state.append((sample_number, parsed_answer))
+            self.possible_numbers = self.constrain(sample_number, parsed_answer)
     
             if parsed_answer['bulls'] == self.game_size:
                 print("Hehe, I won!")

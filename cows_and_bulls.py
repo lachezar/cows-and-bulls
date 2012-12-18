@@ -1,7 +1,8 @@
 import itertools
+import random
 import re
 
-class CowsAndBulls():
+class Game():
 
     def __init__(self, game_size=4):
         self.possible_numbers = self.generate_all_possible_permutations()
@@ -12,7 +13,7 @@ class CowsAndBulls():
         return filter(lambda x: x[0] != 0, itertools.permutations(range(0, 10), 4))
     
     def pick_number_to_ask(self):
-        return self.possible_numbers.pop()
+        return random.sample(self.possible_numbers, 1)[0]
     
     def parse_answer(self, answer):
         bulls = 0
@@ -31,14 +32,15 @@ class CowsAndBulls():
                     parsed_answer['bulls'] == self.game_size - 1)
                 
     def constrain(self, asked_number, parsed_answer):
+        print parsed_answer
         asked_number_set = set(asked_number)
         possible_numbers = filter(lambda n: 
                         parsed_answer['bulls'] == len(filter(lambda x: x[0] == x[1], zip(n, asked_number))) and
-                        parsed_answer['cows'] == len(asked_number_set - set(n)) - parsed_answer['bulls'],
+                        parsed_answer['cows'] == len(asked_number_set & set(n)) - parsed_answer['bulls'],
                         self.possible_numbers)
         return possible_numbers
     
-    def run(self):
+    def play(self):
         while True:
             question = self.pick_number_to_ask()
             print("Is your number %s: " % ''.join(map(str, question)))
@@ -62,6 +64,6 @@ class CowsAndBulls():
                 exit()
         
 if __name__ == '__main__':
-    cnb = CowsAndBulls()
-    cnb.run()
+    cnb = Game()
+    cnb.play()
     
